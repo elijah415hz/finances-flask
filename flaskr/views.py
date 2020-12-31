@@ -50,4 +50,4 @@ def wallchart():
     # Embed the result in the html output.
     buffer.seek(0)
     return send_file(buffer,  attachment_filename='plot.png',
-                    mimetype='image/png', cache_timeout=1200)
+                    mimetype='image/png')
