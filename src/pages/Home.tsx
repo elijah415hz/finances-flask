@@ -391,6 +391,11 @@ function Home() {
         }
     }, [])
 
+    // Move to own component once tested!
+    function downloadFile (): void {
+        API.downloadFile(Auth.token, `${Auth.user}_expenses.xlsx`, "2020-02-01", "2020-05-01")
+    }
+
 
     return (
         <Box component='div' className="Home">
@@ -400,6 +405,11 @@ function Home() {
                 </AppBar>
             ) : null}
             <Box component='header' className="header">
+                <Button 
+                variant="contained"
+                color="secondary"
+                onClick={downloadFile}
+                >Download</Button>
                 <Button
                     variant="contained"
                     color="primary"

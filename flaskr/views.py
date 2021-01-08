@@ -1,7 +1,8 @@
-from flask import Blueprint, send_file, current_app
+from flask import Blueprint, send_file, current_app, send_from_directory
 import pandas as pd
 from matplotlib.figure import Figure
 import base64
+import os
 from io import BytesIO
 from .db import engine
 
@@ -9,7 +10,14 @@ bp = Blueprint('views', __name__, url_prefix='')
 
 @bp.route("/")
 def index():
-    return current_app.send_static_file('index.html')
+    return current_app.send_static_file('index.html', cache_timeout=2592000)
+
+# Static js and css files
+@bp.route("/static/<path:filename>")
+def assets(filename):
+    assets_folder = os.path.join(current_app.root_path, '..', 'build/static')
+    print(assets_folder)
+    return send_from_directory(assets_folder, filename, cache_timeout=2592000)
 
 @bp.route("/wallchart")
 def wallchart():
