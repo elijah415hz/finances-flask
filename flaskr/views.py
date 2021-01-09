@@ -10,7 +10,7 @@ bp = Blueprint('views', __name__, url_prefix='')
 
 @bp.route("/")
 def index():
-    return current_app.send_static_file('index.html', cache_timeout=2592000)
+    return current_app.send_static_file('index.html')
 
 # Static js and css files
 @bp.route("/static/<path:filename>")

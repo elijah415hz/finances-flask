@@ -62,6 +62,7 @@ def expenses_file(start, end):
         EXP_report.to_excel(writer, sheet_name='All Expenses', startcol = 0, startrow = 2)
         all_expenses = writer.sheets['All Expenses']
         all_expenses.set_column('A:G', 18)
+        all_expenses.set_row(0, 30)
         all_expenses.set_column('C:C', None, num_format)
         all_expenses.write_string(0, 0, 'All Expenses', title_format)
         writer.save()
