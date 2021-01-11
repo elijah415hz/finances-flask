@@ -163,9 +163,9 @@ def search_expenses(param):
                     LEFT JOIN broad_category b ON b.id=e.broad_category_id \
                     LEFT JOIN person_earner p ON p.id=e.person_id \
                     LEFT JOIN narrow_category n ON n.id=e.narrow_category_id \
-                    WHERE v.name = %s OR b.name = %s OR n.name = %s \
+                    WHERE v.name LIKE CONCAT('%%', %s, '%%') OR b.name LIKE CONCAT('%%', %s, '%%') OR n.name LIKE CONCAT('%%', %s, '%%') OR e.Notes LIKE CONCAT('%%', %s, '%%') \
                     ORDER BY date;"
-        search_report = pd.read_sql(sql, con=engine, params=[param, param, param], parse_dates=['date'])
+        search_report = pd.read_sql(sql, con=engine, params=[param, param, param, param], parse_dates=['date'])
         search_report['Broad_category'] = search_report['Broad_category'].str.replace('_', ' ')
         search_report['Narrow_category'] = search_report['Narrow_category'].str.replace('_', ' ')
         search_report.set_index('Date', inplace=True)

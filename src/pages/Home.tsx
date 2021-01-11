@@ -337,7 +337,10 @@ function Home() {
             logoutBtn: {
                 float: 'right',
                 margin: '1em',
-
+            },
+            downloadBtn: {
+                float: 'left',
+                margin: '1em',
             },
             backdrop: {
                 zIndex: 1301, // To be in front of Dialog at 1300
@@ -415,6 +418,7 @@ function Home() {
                 <Button
                     variant="contained"
                     color="secondary"
+                    className={classes.downloadBtn}
                     onClick={downloadFile}
                 >Download</Button>
                 <Button
