@@ -52,6 +52,13 @@ const API = {
             body: JSON.stringify(data)
         }).then(res => checkStatus<string>(res, 'text'))
     },
+    search: function (token: string | null, {search}: FormStateType): Promise<{ schema: { fields: [] }, data: TableDataEntry[] }> {
+        return fetch(`/api/expenses/search/${search}`, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        }).then(res => checkStatus<TableType>(res, 'json'))
+    },
     postIncome: function (token: string | null, data: IncomeFormType): Promise<Response | string> {
         return fetch(`/api/income/`, {
             method: 'POST',
@@ -151,15 +158,15 @@ const API = {
                 "authorization": `Bearer ${token}`
             }
         }).then(res => checkStatus<Blob>(res, 'blob'))
-        .then(blob => {
-            var url = window.URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-            a.click();    
-            a.remove();  //afterwards we remove the element again         
-        });
+            .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+                a.click();
+                a.remove();  //afterwards we remove the element again         
+            });
     }
 }
 

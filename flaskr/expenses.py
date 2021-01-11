@@ -151,6 +151,26 @@ def delete_expenses(id):
         engine.connect().execute(sql, [id])
         return Response(f'id: {id} Deleted', status=200)
 
+# Search Expenses
+@bp.route("search/<string:param>", methods=['GET'])
+def search_expenses(param):
+    validToken = checkAuth(request)
+    if not validToken:
+        return Response("Nice Try!", status=401)
+    else:
+        sql = "SELECT entry_id, person_id, broad_category_id, narrow_category_id, vendor_id, Date, v.name AS Vendor, Amount, b.name AS Broad_category, n.name AS Narrow_category, p.name AS Person, Notes FROM expenses e \
+                    LEFT JOIN vendor v ON v.id=e.vendor_id \
+                    LEFT JOIN broad_category b ON b.id=e.broad_category_id \
+                    LEFT JOIN person_earner p ON p.id=e.person_id \
+                    LEFT JOIN narrow_category n ON n.id=e.narrow_category_id \
+                    WHERE v.name = %s OR b.name = %s OR n.name = %s \
+                    ORDER BY date;"
+        search_report = pd.read_sql(sql, con=engine, params=[param, param, param], parse_dates=['date'])
+        search_report['Broad_category'] = search_report['Broad_category'].str.replace('_', ' ')
+        search_report['Narrow_category'] = search_report['Narrow_category'].str.replace('_', ' ')
+        search_report.set_index('Date', inplace=True)
+        return search_report.to_json(orient="table")
+
 # Return Pivot Table
 @bp.route("/pivot/<year>/<month>")
 def api_pivot(year, month):

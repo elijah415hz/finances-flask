@@ -27,7 +27,6 @@ export default function Form({
     return (
         <Container className={classes.root}>
                     <Card variant="outlined">
-                        <h2 className={classes.root}>Reports</h2>
                         <form onSubmit={handleFormSubmit} className={classes.root}>
                             <FormControl variant="outlined" className={classes.formControl}>
                                 <InputLabel htmlFor="form">Report</InputLabel>
@@ -40,8 +39,22 @@ export default function Form({
                                     <MenuItem value="income">Income</MenuItem>
                                     <MenuItem value="expenses">Expenses</MenuItem>
                                     <MenuItem value="pivot">Pivot Table</MenuItem>
+                                    <MenuItem value="search">Search Expenses</MenuItem>
                                 </Select>
                             </FormControl>
+                            {formState.form === "search" ? (
+                                <>
+                                <TextField
+                        onChange={handleFormChange}
+                        value={formState.search}
+                        label="Search"
+                        name="search"
+                        type="text"
+                        variant="outlined"
+                    />
+                    </>
+                            ) : (
+                                <>
                             <TextField
                                 onChange={handleFormChange}
                                 value={formState.year}
@@ -73,6 +86,8 @@ export default function Form({
                                     <MenuItem value={12}>December</MenuItem>
                                 </Select>
                             </FormControl>
+                            </>
+                            )}
                             <Button
                                 type="submit"
                                 variant="contained"

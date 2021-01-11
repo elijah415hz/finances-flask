@@ -19,7 +19,8 @@ import {
     Backdrop,
     CircularProgress,
     Dialog,
-    Box
+    Box,
+    TextField
 } from '@material-ui/core';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -37,7 +38,8 @@ function Home() {
         {
             form: "expenses",
             year: new Date(Date.now()).getUTCFullYear(),
-            month: new Date(Date.now()).getUTCMonth() + 1
+            month: new Date(Date.now()).getUTCMonth() + 1,
+            search: ""
         }
     )
 
@@ -73,6 +75,26 @@ function Home() {
         }
 
     )
+
+    const [searchTableState, setSearchTableState] = useState<{ schema: { fields: [] }, data: TableDataEntry[] }>(
+        {
+            schema: { fields: [] },
+            data: [{
+                Amount: "",
+                Date: "",
+                Source: "",
+                Vendor: "",
+                Broad_category: "",
+                Narrow_category: "",
+                Person: "",
+                Notes: "",
+                entry_id: NaN
+            }]
+        }
+
+    )
+
+    const [searchFormState, setSearchFormState] = useState<string>("")
 
 
     // State for datalists
@@ -130,6 +152,9 @@ function Home() {
                     break;
                 case "pivot":
                     setExpensesTableState(response)
+                    break;
+                case "search":
+                    setSearchTableState(response)
                     break;
             }
         } catch (err) {
@@ -314,12 +339,6 @@ function Home() {
                 margin: '1em',
 
             },
-            offline: {
-                backgroundColor: 'red',
-                color: 'white',
-                textAlign: 'center',
-                position: 'sticky'
-            },
             backdrop: {
                 zIndex: 1301, // To be in front of Dialog at 1300
                 color: '#fff',
@@ -375,40 +394,28 @@ function Home() {
         setAddIncomeOpen(false)
     }
 
-    // Control display of Offline banner
-    const [offline, setOffline] = useState<boolean>(false)
-    window.addEventListener("offline", () => setOffline(true))
-    window.addEventListener("online", () => setOffline(false))
-
     useEffect(() => {
         async function getDataLists(): Promise<void> {
             let datalists = await API.dataList(Auth.token)
             setDataListsState(datalists)
         }
         getDataLists()
-        if (!navigator.onLine) {
-            setOffline(true)
-        }
     }, [])
 
     // Move to own component once tested!
-    function downloadFile (): void {
+    function downloadFile(): void {
         API.downloadFile(Auth.token, `${Auth.user}_expenses.xlsx`, "2020-02-01", "2020-05-01")
     }
 
 
+
     return (
         <Box component='div' className="Home">
-            {offline ? (
-                <AppBar className={classes.offline} position='sticky'>
-                    Offline
-                </AppBar>
-            ) : null}
             <Box component='header' className="header">
-                <Button 
-                variant="contained"
-                color="secondary"
-                onClick={downloadFile}
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={downloadFile}
                 >Download</Button>
                 <Button
                     variant="contained"
@@ -455,22 +462,32 @@ function Home() {
                         form={formState.form}
                     />
                 ) : null}
+                {formState.form === "search" && searchTableState.data[0]?.entry_id ? (
+                    <ReportTable
+                        state={searchTableState}
+                        dataLists={dataListsState}
+                        handleChange={handleExpensesChange}
+                        handleUpdate={updateExpensesRow}
+                        deleteEntry={deleteEntry}
+                        form={formState.form}
+                    />
+                ) : null}
                 {formState.form === "pivot" && expensesTableState.data[0]?.entry_id ? (
                     <PivotTable state={expensesTableState} />
                 ) : null}
             </div>
             <Dialog onClose={handleClose} open={addExpensesOpen} maxWidth='xl'>
-                <AddExpensesForm 
-                classes={classes} 
-                handleClose={handleClose}
-                setOpenBackdrop={setOpenBackdrop}
+                <AddExpensesForm
+                    classes={classes}
+                    handleClose={handleClose}
+                    setOpenBackdrop={setOpenBackdrop}
                 />
             </Dialog>
             <Dialog onClose={handleClose} open={addIncomeOpen} maxWidth='xl'>
-                <AddIncomeForm 
-                classes={classes} 
-                handleClose={handleClose}
-                setOpenBackdrop={setOpenBackdrop}
+                <AddIncomeForm
+                    classes={classes}
+                    handleClose={handleClose}
+                    setOpenBackdrop={setOpenBackdrop}
                 />
             </Dialog>
             <SpeedDial
