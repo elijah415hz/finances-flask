@@ -5,15 +5,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { AuthContext } from '../App'
 import { emptyDatabase } from '../utils/db';
@@ -87,17 +82,15 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function PrimarySearchAppBar({handleFormChange, handleFormSubmit, formState}: {
+export default function PrimarySearchAppBar({ handleFormChange, handleFormSubmit, formState }: {
     handleFormChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void,
     handleFormSubmit: (event: React.FormEvent<HTMLFormElement>) => void,
     formState: FormStateType
 }) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const { Auth, setAuth } = React.useContext(AuthContext)
 
     function downloadFile(): void {
@@ -114,17 +107,8 @@ export default function PrimarySearchAppBar({handleFormChange, handleFormSubmit,
         setAnchorEl(event.currentTarget);
     };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
     const handleMenuClose = () => {
         setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
     };
 
     const menuId = 'primary-search-account-menu';
@@ -143,88 +127,51 @@ export default function PrimarySearchAppBar({handleFormChange, handleFormSubmit,
         </Menu>
     );
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton aria-label="show 11 new notifications" color="inherit">
-                    <Badge badgeContent={11} color="secondary">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleMenuOpen}>
-                <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
 
     return (
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar>
-                   <Typography className={classes.title} variant="h6" noWrap>
+                    <Typography className={classes.title} variant="h6" noWrap>
                         Finances
-          </Typography>
+                    </Typography>
                     <div className={classes.search}>
                         <form
                             onSubmit={handleFormSubmit}
-                            >
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
+                        >
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
 
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            name="search"
-                            value={formState.search}
-                            onChange={handleFormChange}
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                                name="search"
+                                value={formState.search}
+                                onChange={handleFormChange}
                             />
-                            </form>
+                        </form>
                     </div>
+                        <div className={classes.grow} />
+                    <div className={classes.sectionDesktop}>
+
                     <Button
-                    color="inherit"
-                    className={classes.title}
-                    onClick={downloadFile}
-                >Download
-                </Button>
+                        color="inherit"
+                        onClick={downloadFile}
+                        // edge="end"
+                        >Download
+                    </Button>
                     <Button
-                    color="inherit"
-                    className={classes.title}
-                    onClick={logout}
-                >Logout
-                </Button>
-                    <div className={classes.grow} />
+                        color="inherit"
+                        onClick={logout}
+                        // edge="end"
+                        >Logout
+                    </Button>
+                        </div>
                     <div className={classes.sectionMobile}>
                         <IconButton
                             aria-label="show more"
@@ -235,11 +182,10 @@ export default function PrimarySearchAppBar({handleFormChange, handleFormSubmit,
                         >
                             <MoreIcon />
                         </IconButton>
-                    
+
                     </div>
                 </Toolbar>
             </AppBar>
-            {renderMobileMenu}
             {renderMenu}
         </div>
     );
