@@ -13,22 +13,19 @@ import type {
     InputName
 } from '../interfaces/Interfaces'
 import {
-    AppBar,
-    Button,
-    Container,
     Backdrop,
     CircularProgress,
     Dialog,
     Box,
-    TextField
+    Typography
 } from '@material-ui/core';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddIcon from '@material-ui/icons/Add'
-import { emptyDatabase } from '../utils/db';
 import PivotTable from '../components/PivotTable';
 import Form from '../components/Form';
+import MyAppBar from '../components/MyAppBar'
 
 function Home() {
     const { Auth, setAuth, setAlertState } = React.useContext(AuthContext)
@@ -358,7 +355,14 @@ function Home() {
                 [theme.breakpoints.down('sm')]: {
                     marginLeft: '-10px'
                 },
-            }
+            },
+            mobileTitle: {
+                display: 'none',
+                [theme.breakpoints.down('sm')]: {
+                    display: 'flex',
+                },
+                justifyContent: 'center',
+            },
         })
     );
     const classes = useStyles();
@@ -405,39 +409,18 @@ function Home() {
         getDataLists()
     }, [])
 
-    // Move to own component once tested!
-    function downloadFile(): void {
-        API.downloadFile(Auth.token, `${Auth.user}_expenses.xlsx`, "2020-02-01", "2020-05-01")
-    }
+   
 
 
 
     return (
         <Box component='div' className="Home">
+            <MyAppBar handleFormChange={handleFormChange} handleFormSubmit={handleFormSubmit} formState={formState}/>
             <Box component='header' className="header">
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.downloadBtn}
-                    onClick={downloadFile}
-                >Download</Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.logoutBtn}
-                    onClick={async () => {
-                        setAuth({ type: 'LOGOUT' })
-                        let res = await emptyDatabase()
-                        console.log(res)
-                    }}
-                >Logout
-                </Button>
-                <Container className={classes.root}>
-                    <h1 style={{ textAlign: 'center' }}>{Auth.user} Finances</h1>
-                </Container>
-
+            <Typography className={classes.mobileTitle} variant="h6" noWrap>
+                        Finances
+          </Typography>
                 <img src="/wallchart" alt="Wall Chart" className={classes.wallchart} />
-
                 <Form
                     classes={classes}
                     handleFormSubmit={handleFormSubmit}
