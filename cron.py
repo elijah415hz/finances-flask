@@ -20,6 +20,6 @@ if today.day == 1:
     ]
     for expense in expensesList:
         today_str = today.strftime("%m/%d/%Y")
-        expense.date = today_str
+        expense.Date = today_str
         insert_expense(expense)
 
