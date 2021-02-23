@@ -52,7 +52,7 @@ def expenses_file(start, end):
         start_date = datetime.strptime(start, '%Y-%m-%d')
         end_date = datetime.strptime(end, '%Y-%m-%d')
         EXP_report = get_expenses(start_date, end_date)
-        EXP_report['date'] = EXP_report['date'].dt.strftime("%m/%d/%Y")
+        EXP_report['Date'] = EXP_report['Date'].dt.strftime("%m/%d/%Y")
         drop_columns = [c for c in EXP_report.columns if c[-3:] == '_id']
         EXP_report.drop(columns=drop_columns, inplace=True)
         EXP_report.columns = EXP_report.columns.str.replace("_", " ")
@@ -61,10 +61,10 @@ def expenses_file(start, end):
                     FROM income i\
                     LEFT JOIN source s ON s.id=i.source_id\
                     LEFT JOIN person_earner p ON p.id=i.earner_id\
-                    WHERE date > %s AND date < %s\
-                    ORDER BY date;"
-        INC_report = pd.read_sql(INC_sql, con=engine, params=[user_id, start_date, end_date], parse_dates=['date'])
-        INC_report['date'] = INC_report['date'].dt.strftime("%m/%d/%Y")
+                    WHERE Date > %s AND Date < %s\
+                    ORDER BY Date;"
+        INC_report = pd.read_sql(INC_sql, con=engine, params=[start_date, end_date], parse_dates=['Date'])
+        INC_report['Date'] = INC_report['Date'].dt.strftime("%m/%d/%Y")
         drop_columns = [c for c in INC_report.columns if c[-2:] == 'id']
         INC_report.drop(columns=drop_columns, inplace=True)
         INC_report.columns = INC_report.columns.str.title()
