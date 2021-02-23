@@ -42,6 +42,7 @@ def api_expenses(year, month):
         EXP_report['Amount'] = EXP_report['Amount'].apply(format_numbers)
         return EXP_report.to_json(orient="table")
 
+# Get xlsx file with all expenses and income
 @bp.route("/file/<start>/<end>") # Dates formatted '%Y-%m-%d'
 def expenses_file(start, end):
     validToken = checkAuth(request)
@@ -51,20 +52,43 @@ def expenses_file(start, end):
         start_date = datetime.strptime(start, '%Y-%m-%d')
         end_date = datetime.strptime(end, '%Y-%m-%d')
         EXP_report = get_expenses(start_date, end_date)
+        EXP_report['date'] = EXP_report['date'].dt.strftime("%m/%d/%Y")
         drop_columns = [c for c in EXP_report.columns if c[-3:] == '_id']
-        print(EXP_report.dtypes)
         EXP_report.drop(columns=drop_columns, inplace=True)
         EXP_report.columns = EXP_report.columns.str.replace("_", " ")
+        # Get Income
+        INC_sql = "SELECT i.id, i.source_id, i.earner_id as person_id, Date, Amount, s.name AS Source, p.name AS Person\
+                    FROM income i\
+                    LEFT JOIN source s ON s.id=i.source_id\
+                    LEFT JOIN person_earner p ON p.id=i.earner_id\
+                    WHERE date > %s AND date < %s\
+                    ORDER BY date;"
+        INC_report = pd.read_sql(INC_sql, con=engine, params=[user_id, start_date, end_date], parse_dates=['date'])
+        INC_report['date'] = INC_report['date'].dt.strftime("%m/%d/%Y")
+        drop_columns = [c for c in INC_report.columns if c[-2:] == 'id']
+        INC_report.drop(columns=drop_columns, inplace=True)
+        INC_report.columns = INC_report.columns.str.title()
+        INC_report.set_index('Date', inplace=True)
+        # Write to file
         buffer = BytesIO()
         writer = pd.ExcelWriter(buffer, engine='xlsxwriter')
         title_format = writer.book.add_format({'bold': True, 'font_size': 20})
         num_format = writer.book.add_format({'num_format': '$#,##0.00'})
-        EXP_report.to_excel(writer, sheet_name='All Expenses', startcol = 0, startrow = 2)
-        all_expenses = writer.sheets['All Expenses']
+        EXP_report.to_excel(writer, sheet_name='Expenses', startcol = 0, startrow = 2)
+        INC_report.to_excel(writer, sheet_name='Income', startcol = 0, startrow = 2)
+        # Styling Expenses
+        all_expenses = writer.sheets['Expenses']
         all_expenses.set_column('A:G', 18)
         all_expenses.set_row(0, 30)
         all_expenses.set_column('C:C', None, num_format)
-        all_expenses.write_string(0, 0, 'All Expenses', title_format)
+        all_expenses.write_string(0, 0, 'Expenses', title_format)
+        # Styling Income
+        income = writer.sheets['Income']
+        income.set_column('A:G', 18)
+        income.set_row(0, 30)
+        income.set_column('B:B', None, num_format)
+        income.write_string(0, 0, 'Income', title_format)
+        # Send File
         writer.save()
         buffer.seek(0)
         return send_file(buffer, attachment_filename="reports.xlsx", cache_timeout=0)
