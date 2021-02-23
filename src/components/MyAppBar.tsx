@@ -94,7 +94,7 @@ export default function PrimarySearchAppBar({ handleFormChange, handleFormSubmit
     const { Auth, setAuth } = React.useContext(AuthContext)
 
     function downloadFile(): void {
-        API.downloadFile(Auth.token, `${Auth.user}_expenses.xlsx`, "2020-02-01", "2020-05-01")
+        API.downloadFile(Auth.token, `${Auth.user}_expenses.xlsx`, "2020-01-01", "2020-12-31")
         handleMenuClose()
     }
 
