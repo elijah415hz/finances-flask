@@ -24,6 +24,7 @@ Jinja2 = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
 Werkzeug = "*"
+xlsxwriter = "*"
 
 [requires]
 python_version = "3.8"
