@@ -51,10 +51,22 @@ def expenses_file(start, end):
     else:
         start_date = datetime.strptime(start, '%Y-%m-%d')
         end_date = datetime.strptime(end, '%Y-%m-%d')
-        EXP_report = get_expenses(start_date, end_date)
+        # Get Expenses
+        sql = "SELECT entry_id, person_id, broad_category_id, narrow_category_id, vendor_id, Date, v.name AS Vendor, Amount, b.name AS Broad_category, n.name AS Narrow_category, p.name AS Person, Notes FROM expenses e \
+                LEFT JOIN vendor v ON v.id=e.vendor_id \
+                LEFT JOIN broad_category b ON b.id=e.broad_category_id \
+                LEFT JOIN person_earner p ON p.id=e.person_id \
+                LEFT JOIN narrow_category n ON n.id=e.narrow_category_id \
+                WHERE date > %s AND date < %s \
+                ORDER BY date;"
+        EXP_report = pd.read_sql(sql, con=engine, params=[start_date, end_date], parse_dates=['date'])
+        EXP_report['Broad_category'] = EXP_report['Broad_category'].str.replace('_', ' ')
+        EXP_report['Narrow_category'] = EXP_report['Narrow_category'].str.replace('_', ' ')
         EXP_report['Date'] = EXP_report['Date'].dt.strftime("%m/%d/%Y")
         drop_columns = [c for c in EXP_report.columns if c[-3:] == '_id']
         EXP_report.drop(columns=drop_columns, inplace=True)
+        EXP_report.columns = EXP_report.columns.str.title()
+        EXP_report.set_index('Date', inplace=True)
         EXP_report.columns = EXP_report.columns.str.replace("_", " ")
         # Get Income
         INC_sql = "SELECT i.id, i.source_id, i.earner_id as person_id, Date, Amount, s.name AS Source, p.name AS Person\
