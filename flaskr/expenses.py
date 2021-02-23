@@ -57,7 +57,7 @@ def expenses_file(start, end):
                 LEFT JOIN broad_category b ON b.id=e.broad_category_id \
                 LEFT JOIN person_earner p ON p.id=e.person_id \
                 LEFT JOIN narrow_category n ON n.id=e.narrow_category_id \
-                WHERE Date > %s AND Date < %s \
+                WHERE Date >= %s AND Date <= %s \
                 ORDER BY Date;"
         EXP_report = pd.read_sql(sql, con=engine, params=[start_date, end_date], parse_dates=['Date'])
         EXP_report['Broad_category'] = EXP_report['Broad_category'].str.replace('_', ' ')
@@ -73,7 +73,7 @@ def expenses_file(start, end):
                     FROM income i\
                     LEFT JOIN source s ON s.id=i.source_id\
                     LEFT JOIN person_earner p ON p.id=i.earner_id\
-                    WHERE Date > %s AND Date < %s\
+                    WHERE Date >= %s AND Date <= %s\
                     ORDER BY Date;"
         INC_report = pd.read_sql(INC_sql, con=engine, params=[start_date, end_date], parse_dates=['Date'])
         INC_report['Date'] = INC_report['Date'].dt.strftime("%m/%d/%Y")
