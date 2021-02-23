@@ -57,9 +57,9 @@ def expenses_file(start, end):
                 LEFT JOIN broad_category b ON b.id=e.broad_category_id \
                 LEFT JOIN person_earner p ON p.id=e.person_id \
                 LEFT JOIN narrow_category n ON n.id=e.narrow_category_id \
-                WHERE date > %s AND date < %s \
-                ORDER BY date;"
-        EXP_report = pd.read_sql(sql, con=engine, params=[start_date, end_date], parse_dates=['date'])
+                WHERE Date > %s AND Date < %s \
+                ORDER BY Date;"
+        EXP_report = pd.read_sql(sql, con=engine, params=[start_date, end_date], parse_dates=['Date'])
         EXP_report['Broad_category'] = EXP_report['Broad_category'].str.replace('_', ' ')
         EXP_report['Narrow_category'] = EXP_report['Narrow_category'].str.replace('_', ' ')
         EXP_report['Date'] = EXP_report['Date'].dt.strftime("%m/%d/%Y")
