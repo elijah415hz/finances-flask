@@ -8,7 +8,7 @@ interface FormStateType {
 type InputName = "Person" | "Source" | "Broad_category" | "Narrow_category" | "Vendor"
 
 interface TableDataEntry {
-    Amount: string,
+    Amount: number,
     Date?: string,
     Source?: string,
     Person?: string,

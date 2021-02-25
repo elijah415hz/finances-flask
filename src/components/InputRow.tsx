@@ -45,7 +45,7 @@ export default function InputRow(props:
         deleteEntry: Function
     }) {
 
-    const [state, setState] = useState<TableDataEntry>({ Amount: "" })
+    const [state, setState] = useState<TableDataEntry>({ Amount: NaN })
 
     function makeDataList(propsState: DataListStateType[], id: string) {
         return (
@@ -76,6 +76,7 @@ export default function InputRow(props:
             {props.fields
                 .filter(column => !column.name.includes("id"))
                 .map(column => {
+                    
                     return (
                         <StyledTableCell
 
@@ -87,18 +88,20 @@ export default function InputRow(props:
                                 }}
                                 onChange={handleInputRowChange}
                                 className="tableInput"
-                                value={state[column.name as keyof TableDataEntry] || ""}
+                                value={column.name === 'Amount' ? state.Amount?.toFixed(2) || NaN : state[column.name as keyof TableDataEntry] || ""}
                                 inputProps={{
-                                    list: column.name
+                                    list: column.name,
+                                    type: column.name === 'Amount' ? 'number': 'text',
+                                    step: .01
                                 }}
                                 InputProps={
                                      {
                                     startAdornment: <InputAdornment position="start">{column.name === 'Amount' ? "$" : null}</InputAdornment>,
                                     disableUnderline: true
                                 }
+                                
                             }
                                 style={{ width: '80%' }}
-                            // style={{width: `${(state[column.name as keyof TableDataEntry]?.toString().length || 12) + 3.5}ch`}}
                             />
                             {column.name === 'Source' && props.dataLists?.source ? (
                                 makeDataList(props.dataLists?.source, column.name)

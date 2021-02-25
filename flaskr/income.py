@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 from .db import engine
-from .expenses import format_numbers
 from .auth import checkAuth
 
 bp = Blueprint('income', __name__, url_prefix='/api/income')
@@ -27,7 +26,6 @@ def api_income(year, month):
                     ORDER BY date;"
         INC_report = pd.read_sql(sql, con=engine, params=[start_date, end_date], parse_dates=['Date'])
         INC_report.set_index('Date', inplace=True)
-        INC_report['Amount'] = INC_report['Amount'].apply(format_numbers)
         return INC_report.to_json(orient="table")
 
 # Used by post_income and post_batch_income

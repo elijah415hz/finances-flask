@@ -39,7 +39,7 @@ def api_expenses(year, month):
         start_date = (month - timedelta(days=1)).date()
         end_date = (month + relativedelta(months=+1)).date()
         EXP_report = get_expenses(start_date, end_date)
-        EXP_report['Amount'] = EXP_report['Amount'].apply(format_numbers)
+        # EXP_report['Amount'] = EXP_report['Amount'].apply(format_numbers)
         return EXP_report.to_json(orient="table")
 
 # Get xlsx file with all expenses and income

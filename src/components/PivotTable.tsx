@@ -69,29 +69,29 @@ export default function PivotTable(props: {
     const pivotState = props.state.data.reduce((a, b) => {
         if (b.Broad_category) {
             if (a[b.Broad_category]) {
-                a[b.Broad_category].total += parseFloat(b.Amount);
+                a[b.Broad_category].total += b.Amount;
             } else {
-                a[b.Broad_category] = { total: parseFloat(b.Amount), narrow_categories: {} };
+                a[b.Broad_category] = { total: b.Amount, narrow_categories: {} };
             }
             if (b.Narrow_category) {
                 if (a[b.Broad_category].narrow_categories[b.Narrow_category]) {
-                    a[b.Broad_category].narrow_categories[b.Narrow_category].total += parseFloat(b.Amount);
+                    a[b.Broad_category].narrow_categories[b.Narrow_category].total += b.Amount;
                 } else {
-                    a[b.Broad_category].narrow_categories[b.Narrow_category] = {total: parseFloat(b.Amount), persons: {}}   ;
+                    a[b.Broad_category].narrow_categories[b.Narrow_category] = {total: b.Amount, persons: {}}   ;
                 }
                 if (b.Person) {
                     if (a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person]) {
-                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] += parseFloat(b.Amount);
+                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] += b.Amount;
                     } else {
-                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] = parseFloat(b.Amount);
+                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] = b.Amount;
                     }
                 }
             } else if (b.Person) {
                 if (a[b.Broad_category].narrow_categories["--"]?.persons[b.Person]) {
-                    a[b.Broad_category].narrow_categories["--"].persons[b.Person] += parseFloat(b.Amount);
-                    a[b.Broad_category].narrow_categories["--"].total += parseFloat(b.Amount);
+                    a[b.Broad_category].narrow_categories["--"].persons[b.Person] += b.Amount;
+                    a[b.Broad_category].narrow_categories["--"].total += b.Amount;
                 } else {
-                a[b.Broad_category].narrow_categories = {...a[b.Broad_category].narrow_categories, "--": {persons: {[b.Person]: parseFloat(b.Amount)}, total: parseFloat(b.Amount)}}
+                a[b.Broad_category].narrow_categories = {...a[b.Broad_category].narrow_categories, "--": {persons: {[b.Person]: b.Amount}, total: b.Amount}}
                 }
             }
         }
