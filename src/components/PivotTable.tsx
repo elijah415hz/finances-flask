@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Table, TableBody, TableContainer, TableCell, TableRow, TableHead } from '@material-ui/core';
-import { withStyles, createStyles, Theme } from '@material-ui/core/styles'
+import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import { TableDataEntry } from '../interfaces/Interfaces';
 import { blueGrey } from '@material-ui/core/colors';
 
@@ -129,9 +130,10 @@ export default function PivotTable(props: {
                             <DarkTableRow key={i} onClick={() => toggleShowRow(i)}>
                                 <StyledTableCell>
                                     {bCat}
+                                    {show[i] ? <ExpandLess style={{marginBottom: "-7px"}}/> : <ExpandMore style={{marginBottom: "-7px"}}/>}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    TOTAL
+                                    {/* Empty Cell */}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                     {/* Empty Cell */}
@@ -151,7 +153,7 @@ export default function PivotTable(props: {
                                                 {nCat}
                                             </StyledTableCell>
                                             <StyledTableCell>
-                                                TOTAL
+                                                {/* Empty Cell */}
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 ${pivotState[bCat].narrow_categories[nCat].total.toFixed(2)}
