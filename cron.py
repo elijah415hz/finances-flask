@@ -3,7 +3,10 @@ from datetime import datetime
 
 today = datetime.now()
 
-if today.day == 1:
+print(f"Today is the {today.day}th day of the month")
+
+if today.day == 2:
+    print("Loading recurring expenses...")
     expensesList = [
         {'vendor': 'Google Play', 'Amount': 1.99, 'broad_category_id': 5, 'narrow_category_id': 6}, 
         {'vendor': 'New York Times', 'Amount': 4, 'broad_category_id': 14, 'narrow_category_id': 47}, 
@@ -20,6 +23,6 @@ if today.day == 1:
     ]
     for expense in expensesList:
         today_str = today.strftime("%m/%d/%Y")
-        expense.Date = today_str
+        expense['Date'] = today_str
         insert_expense(expense)
-
+else: print("Not loading expenses today...")
