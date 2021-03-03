@@ -37,7 +37,7 @@ if today.day == 3:
     print("Loading recurring expenses...")
     expensesList = [
         {'vendor': 'Google Play', 'Amount': 1.99, 'broad_category_id': 5, 'narrow_category_id': 6, 'person_id': None, 'notes': ""},
-        {'vendor': 'New York Times', 'Amount': 4, 'broad_category_id': 14, 'narrow_category_id': 47, 'person_id': None, 'notes': ""},
+        {'vendor': 'New York Times', 'Amount': 14, 'broad_category_id': 14, 'narrow_category_id': 47, 'person_id': None, 'notes': ""},
         {'vendor': 'Planned parenthood', 'Amount': 10, 'broad_category_id': 17, 'narrow_category_id': None, 'person_id': None, 'notes': ""},
         {'vendor': 'Xfinity', 'Amount': 45.00, 'broad_category_id': 7, 'narrow_category_id': 1, 'person_id': None, 'notes': ""},
         {'vendor': 'Ives HOA', 'Amount': 301, 'broad_category_id': 7, 'narrow_category_id': 38, 'person_id': None, 'notes': ""},
