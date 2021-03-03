@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 import os
 
 FLASK_DB_URI = os.environ.get("FLASK_DB_URI")
+exitCode = os.system('../bin/run_cloud_sql_proxy')
 
 # Create database connection
 engine = create_engine(FLASK_DB_URI) 
