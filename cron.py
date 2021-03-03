@@ -1,4 +1,4 @@
-# from flaskr.expenses import insert_expense
+from flaskr.expenses import insert_expense
 from datetime import datetime
 
 today = datetime.now()
