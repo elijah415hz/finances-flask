@@ -1,8 +1,32 @@
-from flaskr.expenses import insert_expense
 from datetime import datetime
+from sqlalchemy import create_engine
+import os
+
+FLASK_DB_URI = os.environ.get("FLASK_DB_URI")
+
+# Create database connection
+engine = create_engine(FLASK_DB_URI) 
+
+# Function to insert each expense individually
+def insert_expense(json):
+    date = datetime.strptime(json['Date'], "%m/%d/%Y").strftime("%Y-%m-%d")
+    amount = json['Amount'] or None
+    person = json['person_id'] or  None
+    b_cat = json['broad_category_id'] or None
+    n_cat = json['narrow_category_id'] or None
+    vendor = json['vendor'] or None
+    notes = json['notes']
+    
+    with engine.connect() as con:
+        insert_vendor_sql = "INSERT IGNORE INTO vendor(name) VALUES(%s)"
+        con.execute(insert_vendor_sql, [vendor])
+        vendor_id = con.execute("SELECT id FROM vendor WHERE name=%s", [vendor]).fetchone()[0]
+        sql = "INSERT INTO expenses(date, vendor_id, amount, broad_category_id, narrow_category_id, person_id, notes)\
+                VALUES(DATE(%s), %s, %s, %s, %s, %s, %s)"     
+        con.execute(sql, [date, vendor_id, amount, b_cat, n_cat, person, notes])
+
 
 today = datetime.now()
-
 print(f"Today is the {today.day}th day of the month")
 
 if today.day == 3:
