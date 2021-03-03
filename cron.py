@@ -5,7 +5,7 @@ today = datetime.now()
 
 print(f"Today is the {today.day}th day of the month")
 
-if today.day == 2:
+if today.day == 3:
     print("Loading recurring expenses...")
     expensesList = [
         {'vendor': 'Google Play', 'Amount': 1.99, 'broad_category_id': 5, 'narrow_category_id': 6, 'person_id': None},
