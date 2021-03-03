@@ -1,10 +1,12 @@
 from datetime import datetime
 from sqlalchemy import create_engine
 import os
+import time
 
 FLASK_DB_URI = os.environ.get("FLASK_DB_URI")
 exitCode = os.system('bin/run_cloud_sql_proxy &>null')
 print("Exit Code:", exitCode)
+time.sleep(10)
 
 # Create database connection
 engine = create_engine(FLASK_DB_URI) 
