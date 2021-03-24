@@ -193,7 +193,7 @@ export default function AddRecordsForm(props: {
         { name: "Student Loans", id: 15 },
         { name: "Education", id: 18, person: true },
         {
-            name: "Theo", id: 7, narrowCategories: [
+            name: "Theo", id: 75, narrowCategories: [
                 { name: "Baby sitting", id: 274 },
                 { name: "Toys", id: 60 },
             ]
