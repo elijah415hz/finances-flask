@@ -277,6 +277,7 @@ export default function AddRecordsForm(props: {
                     <KeyboardDatePicker
                         disableToolbar
                         fullWidth
+                        autoOk={true}
                         variant="inline"
                         format="MM/dd/yyyy"
                         margin="normal"

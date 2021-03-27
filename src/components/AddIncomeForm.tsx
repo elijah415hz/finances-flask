@@ -110,6 +110,7 @@ export default function AddRecordsForm(props: {
                 <form className={props.classes.root} onSubmit={handleFormSubmit}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
+                            autoOk={true}
                             disableToolbar
                             variant="inline"
                             format="MM/dd/yyyy"
