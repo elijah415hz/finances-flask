@@ -1,5 +1,5 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb'
-import { ExpensesFormType, IncomeFormType } from '../interfaces/Interfaces';
+import { AlertStateType, ExpensesFormType, IncomeFormType } from '../interfaces/Interfaces';
 import API from './API';
 
 interface financesDB extends DBSchema {
@@ -55,25 +55,43 @@ export async function emptyDatabase() {
   }
 }
 
-async function checkDatabase() {
+export async function checkDatabase() {
   let token = localStorage.getItem('token')
+  let uploaded: AlertStateType = {
+    severity: undefined,
+    message: "",
+    open: false,
+  }
   try {
     const pendingExpenses = await db.getAll("expenses");
     if (pendingExpenses.length > 0) {
       await API.postBatchExpenses(token, pendingExpenses)
       // delete records if successful
       db.clear('expenses')
+      uploaded = {
+        severity: "success",
+        message: "Saved Expenses uploaded",
+        open: true,
+      }
     }
     const pendingIncome = await db.getAll("income");
     if (pendingIncome.length > 0) {
       await API.postBatchIncome(token, pendingIncome)
       // delete records if successful
       db.clear('income')
+      uploaded = {
+        severity: "success",
+        message: "Saved Income uploaded",
+        open: true,
+      }
     }
   } catch (err) {
     console.error(err)
+    uploaded = {
+      severity: "error",
+      message: "Error uploading saved records",
+      open: true,
+    }
   }
+  return uploaded
 }
-
-// listen for app coming back online
-window.addEventListener("online", checkDatabase);

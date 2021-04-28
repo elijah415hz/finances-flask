@@ -26,6 +26,9 @@ import AddIcon from "@material-ui/icons/Add";
 import PivotTable from "../components/PivotTable";
 import Form from "../components/Form";
 import MyAppBar from "../components/MyAppBar";
+import {
+  checkDatabase
+} from '../utils/db';
 
 function Home() {
   const { Auth, setAuth, setAlertState } = React.useContext(AuthContext);
@@ -108,7 +111,7 @@ function Home() {
   });
 
   // Loading Backdrop display state
-  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // State for displaying which column the table is sorted by
   const [sortedBy, setSortedBy] = useState<{
@@ -151,9 +154,9 @@ function Home() {
     try {
       event.preventDefault();
       let route = formState.form;
-      setOpenBackdrop(true);
+      setLoading(true);
       let response = await API[route](Auth.token, formState);
-      setOpenBackdrop(false);
+      setLoading(false);
       // Formatting the dates the hard way because javascript doesn't support strftime...
       if (route !== "pivot") {
         response.data = response.data.map(formatDatesAndNumbers);
@@ -176,7 +179,7 @@ function Home() {
       if (err.message === "Unauthorized") {
         setAuth({ type: "LOGOUT" });
       }
-      setOpenBackdrop(false);
+      setLoading(false);
       setAlertState({
         severity: "error",
         message: "Error Fetching Data",
@@ -472,6 +475,16 @@ function Home() {
     getDataLists();
   }, []);
 
+  useEffect(() => {
+    async function checkAndDisplaySuccess() {
+        let result = await checkDatabase()
+        setAlertState(result)
+    }
+    // listen for app coming back online
+    window.addEventListener("online", checkAndDisplaySuccess);
+    return () => window.removeEventListener("online", checkAndDisplaySuccess)
+}, [])
+
   return (
     <Box component="div" className="Home">
       <MyAppBar
@@ -540,14 +553,14 @@ function Home() {
         <AddExpensesForm
           classes={classes}
           handleClose={handleClose}
-          setOpenBackdrop={setOpenBackdrop}
+          setLoading={setLoading}
         />
       </Dialog>
       <Dialog onClose={handleClose} open={addIncomeOpen} maxWidth="xl">
         <AddIncomeForm
           classes={classes}
           handleClose={handleClose}
-          setOpenBackdrop={setOpenBackdrop}
+          setLoading={setLoading}
         />
       </Dialog>
       <SpeedDial
@@ -570,7 +583,7 @@ function Home() {
           />
         ))}
       </SpeedDial>
-      <Backdrop className={classes.backdrop} open={openBackdrop}>
+      <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress disableShrink color="inherit" />
       </Backdrop>
     </Box>

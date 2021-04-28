@@ -25,7 +25,7 @@ import { saveRecord } from '../utils/db';
 export default function AddRecordsForm(props: {
     classes: { root: string, formControl: string, dialog: string },
     handleClose: Function,
-    setOpenBackdrop: Function
+    setLoading: Function
 }) {
 
     const { Auth, setAuth, setAlertState } = React.useContext(AuthContext)
@@ -71,16 +71,16 @@ export default function AddRecordsForm(props: {
         let formStateConvertedDate: any = { ...formState }
         try {
             formStateConvertedDate.date = formStateConvertedDate.date?.toLocaleDateString("en-US")
-            props.setOpenBackdrop(true)
+            props.setLoading(true)
             await API.postIncome(Auth.token, formStateConvertedDate)
-            props.setOpenBackdrop(false)
+            props.setLoading(false)
             setAlertState({
                 severity: "success",
                 message: "Record Saved!",
                 open: true
             })
         } catch (err) {
-            props.setOpenBackdrop(false)
+            props.setLoading(false)
             if (err.message === "Error! 500") {
                 setAlertState({
                     severity: "error",
