@@ -16,3 +16,4 @@ Jinja2
 PyMySQL
 SQLAlchemy
 Werkzeug
+xlsxwriter
