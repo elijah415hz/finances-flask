@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  finances-flask:
+    image: elijah415hz/finances-flask
+    restart: always
+    ports: 
+        - 8000:8000
+    links:
+      - finances-db
+    environment:
+      - FLASK_DB_URI=mysql+pymysql://root:HyacinthTulip@finances-db:3306/finances_db
+      - USER_NAME=blarvis
+      - SECRET_KEY=jsdf8734hjfd02j
+      - PASSWORD=$$2a$$12$$5jm7KHXwD68jiNi.n7ewD.5C0Qms57SEjakvKwGeJtrbzPp8yUi66
+    volumes:
+        - ../finances-flask:/usr/src/app
+  finances-db:
+    image: ghcr.io/linuxserver/mariadb
+    restart: always
+    # command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - finances-db:/config
+      - ../finances-flask/db:/config/initdb.d/
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - MYSQL_ROOT_PASSWORD=HyacinthTulip
+        - TZ=America/New_York
+    #   - MYSQL_PASSWORD=password
+    #   - MYSQL_DATABASE=finances_db
+    #   - MYSQL_USER=blarvis
+    # ports:
+    #     - 3306:3306
+volumes:
+    finances-db:
