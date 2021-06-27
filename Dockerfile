@@ -2,8 +2,12 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
+# COPY requirements.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pipenv
 
-CMD ["gunicorn"  , "-b", "0.0.0.0:8000", "wsgi:app"]
+RUN pipenv install
+
+# RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["pipenv", "run", "gunicorn"  , "-b", "0.0.0.0:8000", "wsgi:app"]
