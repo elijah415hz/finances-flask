@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # COPY requirements.txt ./
 
-COPY . ./
+COPY ./Pipfile.lock ./
 
 RUN pip install pipenv
 
