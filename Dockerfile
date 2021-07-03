@@ -2,14 +2,12 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
-# COPY requirements.txt ./
-
 COPY ./Pipfile.lock ./
 
 RUN pip install pipenv
 
 RUN pipenv install
 
-# RUN pip install --no-cache-dir -r requirements.txt
+RUN echo "0 0 1 * * /usr/src/app/cron.py" | crontab -
 
 CMD ["pipenv", "run", "gunicorn"  , "-b", "0.0.0.0:8000", "wsgi:app"]
