@@ -18,7 +18,7 @@ def api_income(year, month):
         month = datetime.strptime(year_month, '%Y-%m')
         start_date = (month - timedelta(days=1)).date()
         end_date = (month + relativedelta(months=+1)).date()
-        sql = "SELECT i.id, i.source_id, i.earner_id as person_id, Date, Amount, s.name AS Source, p.name AS Person\
+        sql = "SELECT i.id, i.source_id, i.earner_id as person_id, Date, s.name AS Source, Amount, p.name AS Person\
                     FROM income i\
                     LEFT JOIN source s ON s.id=i.source_id\
                     LEFT JOIN person_earner p ON p.id=i.earner_id\

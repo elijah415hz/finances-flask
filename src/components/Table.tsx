@@ -1,10 +1,10 @@
-import React, { useEffect, createRef } from "react";
+import React, { useEffect, createRef, useState } from "react";
 import InputRow from "./InputRow";
 import type {
   TableDataEntry,
   AllDataListsType,
 } from "../interfaces/Interfaces";
-import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
+import { ArrowDropDown, ArrowDropUp, SettingsOverscanOutlined } from "@material-ui/icons";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,6 +12,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import {StyledTableRow } from "./InputRow";
 
 import {
   makeStyles,
@@ -19,6 +20,7 @@ import {
   withStyles,
   Theme,
 } from "@material-ui/core/styles";
+import StaticRow from "./StaticRow";
 
 export default function ReportTable(props: {
   state: {
@@ -36,6 +38,9 @@ export default function ReportTable(props: {
   deleteEntry: Function;
   form?: string;
 }) {
+
+  const [total, setTotal] = useState("")
+
   const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
       head: {
@@ -89,7 +94,12 @@ export default function ReportTable(props: {
 
   useEffect(() => {
     executeScroll();
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    let total = Number(props.state.data.map(data=>data.Amount).reduce((agg, curr) => agg + Number(curr))).toFixed(2);
+    setTotal(total);
+  }, [props.state.data]);
 
   return (
     <TableContainer component={Paper}>
@@ -127,7 +137,7 @@ export default function ReportTable(props: {
             <InputRow
               entry={entry}
               i={i}
-              key={i}
+              key={"row"+i}
               fields={props.state.schema.fields}
               handleChange={props.handleChange}
               handleUpdate={props.handleUpdate}
@@ -135,6 +145,12 @@ export default function ReportTable(props: {
               deleteEntry={props.deleteEntry}
             />
           ))}
+          <StyledTableRow>
+            <StyledTableCell>Total</StyledTableCell>
+            <StyledTableCell>---------</StyledTableCell>
+            <StyledTableCell>{'$' + total}</StyledTableCell>
+            {props.state.schema.fields.filter(column => !column.name.includes("id")).map((x, i)=> i < props.state.schema.fields.filter(column => !column.name.includes("id")).length - 1 ? (<StyledTableCell></StyledTableCell>) : null)}
+          </StyledTableRow>
         </TableBody>
       </Table>
     </TableContainer>

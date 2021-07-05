@@ -70,36 +70,34 @@ export default function PivotTable(props: {
     const pivotState = props.state.data.reduce((a, b) => {
         if (b.Broad_category) {
             if (a[b.Broad_category]) {
-                a[b.Broad_category].total += b.Amount;
+                a[b.Broad_category].total += Number(b.Amount);
             } else {
-                a[b.Broad_category] = { total: b.Amount, narrow_categories: {} };
+                a[b.Broad_category] = { total: Number(b.Amount), narrow_categories: {} };
             }
             if (b.Narrow_category) {
                 if (a[b.Broad_category].narrow_categories[b.Narrow_category]) {
-                    a[b.Broad_category].narrow_categories[b.Narrow_category].total += b.Amount;
+                    a[b.Broad_category].narrow_categories[b.Narrow_category].total += Number(b.Amount);
                 } else {
-                    a[b.Broad_category].narrow_categories[b.Narrow_category] = {total: b.Amount, persons: {}}   ;
+                    a[b.Broad_category].narrow_categories[b.Narrow_category] = {total: Number(b.Amount), persons: {}}   ;
                 }
                 if (b.Person) {
                     if (a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person]) {
-                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] += b.Amount;
+                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] += Number(b.Amount);
                     } else {
-                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] = b.Amount;
+                        a[b.Broad_category].narrow_categories[b.Narrow_category].persons[b.Person] = Number(b.Amount);
                     }
                 }
             } else if (b.Person) {
                 if (a[b.Broad_category].narrow_categories["--"]?.persons[b.Person]) {
-                    a[b.Broad_category].narrow_categories["--"].persons[b.Person] += b.Amount;
-                    a[b.Broad_category].narrow_categories["--"].total += b.Amount;
+                    a[b.Broad_category].narrow_categories["--"].persons[b.Person] += Number(b.Amount);
+                    a[b.Broad_category].narrow_categories["--"].total += Number(b.Amount);
                 } else {
-                a[b.Broad_category].narrow_categories = {...a[b.Broad_category].narrow_categories, "--": {persons: {[b.Person]: b.Amount}, total: b.Amount}}
+                a[b.Broad_category].narrow_categories = {...a[b.Broad_category].narrow_categories, "--": {persons: {[b.Person]: Number(b.Amount)}, total: Number(b.Amount)}}
                 }
             }
         }
         return a
     }, {} as any)
-
-    console.log(pivotState)
 
     useEffect(() => {
         let showState = Object.keys(pivotState).map((i: any) => false)

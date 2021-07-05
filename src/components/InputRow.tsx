@@ -17,7 +17,7 @@ const StyledTableCell = withStyles((theme: Theme) =>
     }),
 )(TableCell);
 
-const StyledTableRow = withStyles((theme: Theme) =>
+export const StyledTableRow = withStyles((theme: Theme) =>
     createStyles({
         root: {
             '&:nth-of-type(odd)': {
@@ -88,7 +88,7 @@ export default function InputRow(props:
                                 }}
                                 onChange={handleInputRowChange}
                                 className="tableInput"
-                                value={column.name === 'Amount' ? state.Amount?.toFixed(2) || NaN : state[column.name as keyof TableDataEntry] || ""}
+                                value={column.name === 'Amount' ? Number(Number(state.Amount)?.toFixed(2)) || NaN : state[column.name as keyof TableDataEntry] || ""}
                                 inputProps={{
                                     list: column.name,
                                     type: column.name === 'Amount' ? 'number': 'text',
