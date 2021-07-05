@@ -1,7 +1,5 @@
 from flask import Blueprint, Response, request, jsonify, current_app
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import bcrypt
 import jwt
 import sys
 
@@ -32,10 +30,11 @@ def login():
     json = request.get_json()
     username = json['username']
     password = json['password']
-    if username == USER_NAME and bcrypt.checkpw(password, PASSWORD):
+    if username == USER_NAME and password == PASSWORD:
         token = jwt.encode({'username': username, 'exp' : datetime.utcnow() + timedelta(days=30)}, current_app.config['SECRET_KEY'], algorithm="HS256")  
         return jsonify({'token' : token}) 
     else:
+        print(username, password, USER_NAME, PASSWORD)
         return Response("Wrong credentials!", status=401)
 
 @bp.route("/checkAuth", methods=['GET'])
