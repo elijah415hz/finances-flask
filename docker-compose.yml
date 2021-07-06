@@ -15,6 +15,7 @@ services:
       - PASSWORD=$$2a$$12$$5jm7KHXwD68jiNi.n7ewD.5C0Qms57SEjakvKwGeJtrbzPp8yUi66
     volumes:
         - ../finances-flask:/usr/src/app
+        - backups:/usr/backups
   finances-db:
     image: ghcr.io/linuxserver/mariadb
     restart: always
@@ -34,3 +35,4 @@ services:
     #     - 3306:3306
 volumes:
     finances-db:
+    backups:
