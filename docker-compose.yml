@@ -12,7 +12,9 @@ services:
       - FLASK_DB_URI=mysql+pymysql://root:HyacinthTulip@finances-db:3306/finances_db
       - USER_NAME=blarvis
       - SECRET_KEY=jsdf8734hjfd02j
-      - PASSWORD=$$2a$$12$$5jm7KHXwD68jiNi.n7ewD.5C0Qms57SEjakvKwGeJtrbzPp8yUi66
+      - PASSWORD=HyacinthTulip080518
+      - DB_PASSWORD=HyacinthTulip
+      - DB_HOST=finances-db
     volumes:
         - ../finances-flask:/usr/src/app
         - backups:/usr/backups

@@ -24,6 +24,9 @@ PyMySQL = "*"
 SQLAlchemy = "*"
 Werkzeug = "*"
 xlsxwriter = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+oauth2client = "*"
 
 [requires]
 python_version = "3.9"

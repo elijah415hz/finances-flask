@@ -8,7 +8,7 @@ RUN pip install pipenv
 
 RUN pipenv install
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update && apt-get -y install cron zip
 
 # Copy hello-cron file to the cron.d directory
 COPY  cron /etc/cron.d/cron

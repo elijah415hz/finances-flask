@@ -1,2 +1,2 @@
 0 0 1 * * /usr/src/app/cron.py
-0 30 * * * mysqldump -uroot -p$PASSWORD finances_db | gzip > /usr/backups/finances_backup_$(date +%m-%d-%Y).sql.gz
+30 0 * * * pipenv run python /usr/src/app/backup.py
